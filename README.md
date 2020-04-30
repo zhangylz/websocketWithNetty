@@ -247,49 +247,28 @@ ChannelGroup是netty提供用于管理web于服务器建立的通道channel的�
 客户端代码，只需要javascript的内置对象websocket即可：
 
 ```javascript
-var socket;
-    
-    
-    if(!window.WebSocket){
-   
-        window.WebSocket = window.MozWebSocket;
-    }
-   
-    if(window.WebSocket){
-        socket = new WebSocket("ws://localhost:8081/websocket");
-        
-        socket.onmessage = function(event){
-   
-              var ta = document.getElementById('responseText');
-              ta.value += event.data+"\r\n";
-        };
-   
-        socket.onopen = function(event){
-   
-              var ta = document.getElementById('responseText');
-              ta.value = "打开WebSoket 服务正常，浏览器支持WebSoket!"+"\r\n";
-              
-        };
-   
-        socket.onclose = function(event){
-   
-              var ta = document.getElementById('responseText');
-              ta.value = "";
-              ta.value = "WebSocket 关闭"+"\r\n";
-        };
-    }else{
-          alert("您的浏览器不支持WebSocket协议！");
-    }
-   
-    function send(message){
-      if(!window.WebSocket){return;}
-      if(socket.readyState == WebSocket.OPEN){
-          socket.send(message);
-      }else{
-          alert("WebSocket 连接没有建立成功！");
-      }
-      
-    }
+
+var aWebSocket = new WebSocket("ws://127.0.0.1:8081");
+
+aWebSocket.onopen = (event) => {
+    console.log("[websocket] on open(connected)");
+
+    aWebSocket.send("hello server...");
+};
+
+aWebSocket.onclose = (event) => {
+    console.log("[websocket] closed, code:" + event.code + " reason: " + event.reason);
+
+};
+
+aWebSocket.onerror = (event) => {
+    console.log("[websocket] error, code:" + event.code + " reason: " + event.reason);
+};
+
+aWebSocket.onmessage = function (messageEvent) {
+    console.log(messageEvent);
+};
+
 ```
 
 > 给出一个websocket的参考API地址：https://developer.mozilla.org/zh-CN/docs/Web/API/WebSocket/WebSocket
